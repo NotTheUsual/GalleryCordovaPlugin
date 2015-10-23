@@ -15,24 +15,22 @@ import UIKit
     func viewGallery(command: CDVInvokedUrlCommand) {
         self.command = command
         
-        // if let phoneNumbers = command.argumentAtIndex(0) as? [String],
-        //    let countryCode = command.argumentAtIndex(1) as? String {
-            
-        //     commandDelegate!.runInBackground {
-        //         self.numberFormatter = MPPhoneNumberFormatter(countryCode: countryCode)
-                
-        //         self.setupAddressBookWithCompletion { (addressBookRef) in
-        //             if addressBookRef != nil {
-        //                 let contacts = self.searchContactsForPhoneNumbers(phoneNumbers)
-        //                 let responseArray = contacts.map { $0.dictionaryRepresentation }
-        //                 self.sendPluginResponse(responseArray)
-        //             } else {
-        //                 self.sendPluginResponse(error: ["message": "AddressBook access denied"])
-        //             }
-        //         }
-        //     }
-        // } else {
-        //     sendPluginResponse(error: ["message": "Not enough details provided"])
-        // }
-    } 
+        let storyboard = UIStoryboard(name: "GalleryStoryboard", bundle: nil)
+        let modalViewController = storyboard.instantiateViewControllerWithIdentifier("galleryViewController") as! ModalViewController
+        modalViewController.closeCallback = modalDidClose
+        viewController!.modalPresentationStyle = .CurrentContext
+        modalViewController.modalPresentationStyle = .OverCurrentContext
+        viewController!.modalTransitionStyle = .CoverVertical
+        viewController!.presentViewController(modalViewController, animated: true, completion: nil)
+    }
+    
+    func modalDidClose() {
+        print("modal closed")
+        sendPluginResponse("Closed normally")
+    }
+    
+    private func sendPluginResponse(response: String) {
+        let result = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: response)
+        self.commandDelegate!.sendPluginResult(result, callbackId: command.callbackId)
+    }
 }
