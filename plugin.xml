@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="co.jadh.cordova.GalleryPlugin" version="0.0.1" xmlns="http://www.phonegap.com/ns/plugins/1.0" >
+    <name>GalleryPlugin</name>
+    <author>James Hunter</author>
+
+    <engines>
+      <engine name="cordova" version=">=3.0.0" />
+    </engines>
+
+    <js-module name="GalleryPlugin" src="www/GalleryPlugin.js">
+        <clobbers target="cordova.plugins.GalleryPlugin" />
+    </js-module>
+
+    <platform name="ios">
+      <hook type="after_plugin_install" src="hooks/add_swift_support.js" />
+
+      <header-file src="src/ios/cordova-plugin-GalleryPlugin-Bridging-Header.h" />
+      <source-file src="src/ios/GalleryPlugin.swift" />
+
+      <config-file target="config.xml" parent="/*">
+        <feature name="GalleryPlugin">
+          <param name="ios-package" value="GalleryPlugin" />
+          <param name="onload" value="true" />
+        </feature>
+      </config-file>
+    </platform>
+</plugin>
