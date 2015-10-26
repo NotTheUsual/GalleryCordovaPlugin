@@ -14,6 +14,9 @@ import UIKit
 
     func viewGallery(command: CDVInvokedUrlCommand) {
         self.command = command
+
+        print(command.argumentAtIndex(0))
+        print(command.argumentAtIndex(1))
         
         let storyboard = UIStoryboard(name: "GalleryStoryboard", bundle: nil)
         let modalViewController = storyboard.instantiateViewControllerWithIdentifier("galleryViewController") as! ModalViewController
