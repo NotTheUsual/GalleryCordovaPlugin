@@ -27,6 +27,7 @@ class GalleryCell: UICollectionViewCell, UIScrollViewDelegate {
     private var imageView = UIImageView()
     private static var scrollZoom: CGFloat?
     
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
             scrollView.addSubview(imageView)
@@ -70,7 +71,9 @@ class GalleryCell: UICollectionViewCell, UIScrollViewDelegate {
     
     private func initializeImage(image: MPImage) {
         imageView.removeFromSuperview()
-        imageView = UIImageView(image: UIImage(named: "loading"))
+        spinner.startAnimating()
+        spinner.hidden = false
+        imageView = UIImageView()
         imageView.downloadImageFromLink(image.src)
         imageView.sizeToFit()
         
@@ -130,6 +133,8 @@ private extension UIImageView {
                     if cell.hasCorrectImage(link) {
                         cell.resetScrollViewSize()
                         cell.scrollView.setNeedsDisplay()
+                        cell.spinner.stopAnimating()
+                        cell.spinner.hidden = true
                     }
                 }
             }

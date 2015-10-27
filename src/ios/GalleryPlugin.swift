@@ -24,6 +24,7 @@ import UIKit
         let navCtrl = storyboard.instantiateViewControllerWithIdentifier("galleryNavigationController") as! UINavigationController
         let galleryNavCtrl = navCtrl.childViewControllers[0] as! GalleryViewController
         galleryNavCtrl.closeCallback = modalDidClose
+        galleryNavCtrl.deleteCallback = modalDidCloseToDeleteImageAtIndex
         galleryNavCtrl.initialIndex = index
         galleryNavCtrl.images = images
         
@@ -34,13 +35,29 @@ import UIKit
     }
     
     func modalDidClose() {
-        print("modal closed")
-        sendPluginResponse("Closed normally")
+        sendPluginResponse(responseDict(.Normal, index: nil))
         images = [MPImage]()
     }
     
-    private func sendPluginResponse(response: String) {
-        let result = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: response)
+    func modalDidCloseToDeleteImageAtIndex(index: Int) {
+        sendPluginResponse(responseDict(.Delete, index: index))
+        images = [MPImage]()
+    }
+    
+    private func sendPluginResponse(response: [String: AnyObject]) {
+        let result = CDVPluginResult(status: CDVCommandStatus_OK, messageAsDictionary: response)
         self.commandDelegate!.sendPluginResult(result, callbackId: command.callbackId)
+    }
+    
+    private func responseDict(responseType: Response, index: Int?) -> [String: AnyObject] {
+        var dict = [String: AnyObject]()
+        dict["action"] = responseType.rawValue
+        if let index = index { dict["index"] = index }
+        return dict
+    }
+    
+    private enum Response: String {
+        case Normal = "none"
+        case Delete = "delete"
     }
 }

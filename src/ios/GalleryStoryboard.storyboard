@@ -101,6 +101,10 @@
                                     <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="oEi-ok-Gw9">
+                                            <rect key="frame" x="82" y="81" width="37" height="37"/>
+                                            <animations/>
+                                        </activityIndicatorView>
                                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iTl-tS-0IS">
                                             <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
                                             <animations/>
@@ -112,12 +116,15 @@
                                 <animations/>
                                 <constraints>
                                     <constraint firstAttribute="bottomMargin" secondItem="iTl-tS-0IS" secondAttribute="bottom" constant="-8" id="1FD-S7-XTZ"/>
+                                    <constraint firstItem="oEi-ok-Gw9" firstAttribute="centerX" secondItem="1sj-Ua-udI" secondAttribute="centerX" id="YLz-jI-jcJ"/>
+                                    <constraint firstItem="oEi-ok-Gw9" firstAttribute="centerY" secondItem="1sj-Ua-udI" secondAttribute="centerY" id="dhV-Fi-dXj"/>
                                     <constraint firstAttribute="trailingMargin" secondItem="iTl-tS-0IS" secondAttribute="trailing" constant="-8" id="iGg-Bd-ddw"/>
                                     <constraint firstItem="iTl-tS-0IS" firstAttribute="top" secondItem="1sj-Ua-udI" secondAttribute="topMargin" constant="-8" id="tFK-hV-Z4B"/>
                                     <constraint firstItem="iTl-tS-0IS" firstAttribute="leading" secondItem="1sj-Ua-udI" secondAttribute="leadingMargin" constant="-8" id="tKh-2o-Nzf"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="scrollView" destination="iTl-tS-0IS" id="yqZ-Hf-u9B"/>
+                                    <outlet property="spinner" destination="oEi-ok-Gw9" id="iCw-75-QmP"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>

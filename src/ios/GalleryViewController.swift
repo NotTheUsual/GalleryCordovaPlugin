@@ -13,6 +13,7 @@ private let reuseIdentifier = "PhotoCell"
 class GalleryViewController: UICollectionViewController {
     
     var closeCallback: (() -> Void)?
+    var deleteCallback: ((Int) -> Void)?
     var initialIndex: Int?
     var images = [MPImage]()
     
@@ -47,6 +48,7 @@ class GalleryViewController: UICollectionViewController {
         shareButton.tintColor = UIColor.whiteColor()
         self.navigationItem.rightBarButtonItem = shareButton
         let doneButton = UIBarButtonItem(title: "Done", style: .Done, target: self, action: "doneClicked:")
+        doneButton.tintColor = UIColor.whiteColor()
         self.navigationItem.leftBarButtonItem = doneButton
     }
     
@@ -126,8 +128,10 @@ class GalleryViewController: UICollectionViewController {
     }
     
     func deleteActivePhoto(action: UIAlertAction) {
-        if let visibleCell = currentCell() {
-            print(visibleCell.image)
+        if let visibleCell = currentCell(),
+           let index = images.indexOf(visibleCell.image!),
+           let callback = deleteCallback {
+            dismissViewControllerAnimated(true) { callback(index) }
         }
     }
 
