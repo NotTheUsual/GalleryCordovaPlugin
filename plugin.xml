@@ -16,7 +16,9 @@
 
       <header-file src="src/ios/cordova-plugin-GalleryPlugin-Bridging-Header.h" />
       <source-file src="src/ios/GalleryPlugin.swift" />
-      <source-file src="src/ios/ModalViewController.swift" />
+      <source-file src="src/ios/GalleryViewController.swift" />
+      <source-file src="src/ios/GalleryCell.swift" />
+      <source-file src="src/ios/MPImage.swift" />
       <resource-file src="src/ios/GalleryStoryboard.storyboard" />
 
       <config-file target="config.xml" parent="/*">
