@@ -28,8 +28,14 @@ import UIKit
         galleryNavCtrl.initialIndex = index
         galleryNavCtrl.images = images
         
-        viewController!.modalPresentationStyle = .CurrentContext
-        navCtrl.modalPresentationStyle = .OverCurrentContext
+        var presentationStyle: UIModalPresentationStyle
+        if #available(iOS 8, *) {
+            presentationStyle = .OverCurrentContext
+        } else {
+            presentationStyle = .CurrentContext
+        }
+        viewController!.modalPresentationStyle = presentationStyle
+        navCtrl.modalPresentationStyle = presentationStyle
         viewController!.modalTransitionStyle = .CoverVertical
         viewController!.presentViewController(navCtrl, animated: true, completion: nil)
     }

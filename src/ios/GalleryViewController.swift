@@ -10,7 +10,7 @@ import UIKit
 
 private let reuseIdentifier = "PhotoCell"
 
-class GalleryViewController: UICollectionViewController {
+class GalleryViewController: UICollectionViewController, UIActionSheetDelegate {
     
     var closeCallback: (() -> Void)?
     var deleteCallback: ((Int) -> Void)?
@@ -41,6 +41,25 @@ class GalleryViewController: UICollectionViewController {
         self.collectionView!.collectionViewLayout = flowLayout
         
         self.navigationController!.automaticallyAdjustsScrollViewInsets = false
+        
+        guard #available(iOS 8, *) else { addPlainBG(); return }
+        
+        addVisualEffectBG()
+        self.navigationController!.hidesBarsOnTap = true
+    }
+    
+    @available(iOS 8, *)
+    private func addVisualEffectBG() {
+        let visualEffect = UIBlurEffect(style: .Dark)
+        let visualEffectView = UIVisualEffectView(effect: visualEffect)
+        visualEffectView.frame = self.view.bounds
+        self.view.insertSubview(visualEffectView, atIndex: 0)
+    }
+    
+    private func addPlainBG() {
+        let plainView = UIView(frame: self.view.bounds)
+        plainView.backgroundColor = UIColor(white: 0, alpha: 0.75)
+        self.view.insertSubview(plainView, atIndex: 0)
     }
     
     private func setUpNavbar() {
@@ -96,17 +115,45 @@ class GalleryViewController: UICollectionViewController {
     }
     
     func actionClicked(sender: UIBarButtonItem) {
+        guard #available(iOS 8, *) else { showOldActionSheet(); return }
+
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         alertController.addAction(UIAlertAction(title: "Save to Camera Roll", style: .Default, handler: saveActivePhoto))
-        if let visibleCell = currentCell(),
-           let image = visibleCell.image where image.canDelete {
+        if canDeleteCurrentCell() {
             alertController.addAction(UIAlertAction(title: "Delete", style: .Destructive, handler: deleteActivePhoto))
         }
         alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
         presentViewController(alertController, animated: true, completion: nil)
     }
     
+    func showOldActionSheet() {
+        let actionSheet = UIActionSheet()
+        actionSheet.addButtonWithTitle("Save to Camera Roll")
+        if canDeleteCurrentCell() {
+            actionSheet.addButtonWithTitle("Delete")
+            actionSheet.destructiveButtonIndex = 1
+            actionSheet.addButtonWithTitle("Cancel")
+            actionSheet.cancelButtonIndex = 2
+        } else {
+            actionSheet.addButtonWithTitle("Cancel")
+            actionSheet.cancelButtonIndex = 1
+        }
+        actionSheet.delegate = self
+        actionSheet.showInView(self.view)
+    }
+    
+    func canDeleteCurrentCell() -> Bool {
+        guard let visibleCell = currentCell(),
+            let image = visibleCell.image
+            else { return false }
+        return image.canDelete
+    }
+    
+    @available(iOS 8, *)
     func saveActivePhoto(action: UIAlertAction) {
+        saveActivePhoto()
+    }
+    func saveActivePhoto() {
         if let visibleCell = currentCell(),
            let image = visibleCell.image?.view?.image {
             print(visibleCell)
@@ -115,6 +162,8 @@ class GalleryViewController: UICollectionViewController {
     }
     
     func savedImage(image: UIImage, withError error: NSError?, andContextInfo contextInfo: UnsafeMutablePointer<Void>) {
+        guard #available(iOS 8, *) else { showOldSavedImageAlertWith(error); return }
+
         var alertController: UIAlertController
         if let e = error {
             logErrorsFrom(e)
@@ -127,11 +176,35 @@ class GalleryViewController: UICollectionViewController {
         presentViewController(alertController, animated: true, completion: nil)
     }
     
+    func showOldSavedImageAlertWith(error: NSError?) {
+        var alert: UIAlertView
+        if let e = error {
+            logErrorsFrom(e)
+            alert = UIAlertView(title: "Error", message: e.localizedDescription, delegate: nil, cancelButtonTitle: "OK")
+        } else {
+            alert = UIAlertView(title: "Success", message: "Photo saved!", delegate: nil, cancelButtonTitle: "OK")
+        }
+        alert.show()
+    }
+    
+    @available(iOS 8, *)
     func deleteActivePhoto(action: UIAlertAction) {
+        deleteActivePhoto()
+    }
+    func deleteActivePhoto() {
         if let visibleCell = currentCell(),
            let index = images.indexOf(visibleCell.image!),
            let callback = deleteCallback {
             dismissViewControllerAnimated(true) { callback(index) }
+        }
+    }
+    
+    // MARK: - iOS<8 UIActionSheetDelegate
+    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
+        switch actionSheet.buttonTitleAtIndex(buttonIndex)! {
+        case "Save to Camera Roll": saveActivePhoto()
+        case "Delete": deleteActivePhoto()
+        default: break
         }
     }
 
@@ -202,6 +275,7 @@ class GalleryViewController: UICollectionViewController {
         }
     }
     
+    @available(iOS 8, *)
     private func alertWithTitle(title: String, message: String) -> UIAlertController {
         return UIAlertController(title: title, message: message, preferredStyle: .Alert)
     }
