@@ -29,11 +29,7 @@ import UIKit
         galleryNavCtrl.images = images
         
         var presentationStyle: UIModalPresentationStyle
-        if #available(iOS 8, *) {
-            presentationStyle = .OverCurrentContext
-        } else {
-            presentationStyle = .CurrentContext
-        }
+        presentationStyle = .OverCurrentContext
         viewController!.modalPresentationStyle = presentationStyle
         navCtrl.modalPresentationStyle = presentationStyle
         viewController!.modalTransitionStyle = .CoverVertical

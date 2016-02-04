@@ -17,9 +17,9 @@ class GalleryCell: UICollectionViewCell, UIScrollViewDelegate {
             if let uiImageView = image.view {
                 imageView.removeFromSuperview()
                 imageView = uiImageView
-                 updateImage()
+                updateImage()
             } else {
-                 initializeImage(image)
+                initializeImage(image)
             }
         }
     }
@@ -28,19 +28,16 @@ class GalleryCell: UICollectionViewCell, UIScrollViewDelegate {
     private static var scrollZoom: CGFloat?
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
-    @IBOutlet weak var scrollView: UIScrollView! {
+    @IBOutlet weak var myScrollView: UIScrollView! {
         didSet {
-            scrollView.addSubview(imageView)
-            scrollView.contentSize = self.frame.size
-            scrollView.delegate = self
-            scrollView.maximumZoomScale = 1.0
-            scrollView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+            myScrollView.addSubview(imageView)
+            myScrollView.contentSize = self.frame.size
+            myScrollView.delegate = self
+            myScrollView.maximumZoomScale = 1.0
+            myScrollView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
             
             if image != nil {
-                print("photo!")
-                 updateImage()
-            } else {
-                print("no photo...")
+                updateImage()
             }
         }
     }
@@ -49,24 +46,24 @@ class GalleryCell: UICollectionViewCell, UIScrollViewDelegate {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        scrollView.zoomScale = 1.0
-        scrollView.contentOffset = CGPoint(x: 0, y: 0)
+        myScrollView.zoomScale = 1.0
+        myScrollView.contentOffset = CGPoint(x: 0, y: 0)
     }
     
     // MARK: View Setup
     
     private func resetScrollViewSize() {
         let imageViewSize = imageView.bounds.size
-        let scrollViewSize = scrollView.bounds.size
+        let scrollViewSize = myScrollView.bounds.size
         
         let widthScale  = scrollViewSize.width  / (imageViewSize.width + 6.0)
         let heightScale = scrollViewSize.height / imageViewSize.height
         
         let minZoom = min(widthScale, heightScale, 0.999)
-        scrollView.minimumZoomScale = minZoom
-        scrollView.zoomScale = minZoom
+        myScrollView.minimumZoomScale = minZoom
+        myScrollView.zoomScale = minZoom
         
-        setImageCentredIn(scrollView)
+        setImageCentredIn(myScrollView)
     }
     
     private func initializeImage(image: MPImage) {
@@ -77,22 +74,22 @@ class GalleryCell: UICollectionViewCell, UIScrollViewDelegate {
         imageView.downloadImageFromLink(image.src)
         imageView.sizeToFit()
         
-        scrollView.minimumZoomScale = 1.0
-        scrollView.maximumZoomScale = 1.0
-        scrollView.zoomScale = 1.0
+        myScrollView.minimumZoomScale = 1.0
+        myScrollView.maximumZoomScale = 1.0
+        myScrollView.zoomScale = 1.0
         
-        setImageCentredIn(scrollView)
+        setImageCentredIn(myScrollView)
         
-        scrollView.addSubview(imageView)
-        scrollView.setNeedsDisplay()
+        myScrollView.addSubview(imageView)
+        myScrollView.setNeedsDisplay()
         self.image!.view = imageView
     }
     
     private func updateImage() {
         imageView.sizeToFit()
         resetScrollViewSize()
-        scrollView.addSubview(imageView)
-        scrollView.setNeedsDisplay()
+        myScrollView.addSubview(imageView)
+        myScrollView.setNeedsDisplay()
     }
     
     private func setImageCentredIn(scrollView: UIScrollView) {
@@ -132,7 +129,7 @@ private extension UIImageView {
                 if let cell = self.superview?.superview?.superview as? GalleryCell {
                     if cell.hasCorrectImage(link) {
                         cell.resetScrollViewSize()
-                        cell.scrollView.setNeedsDisplay()
+                        cell.myScrollView.setNeedsDisplay()
                         cell.spinner.stopAnimating()
                         cell.spinner.hidden = true
                     }
