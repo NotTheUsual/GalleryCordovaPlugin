@@ -23,10 +23,10 @@ class GalleryCell: UICollectionViewCell, UIScrollViewDelegate {
             }
         }
     }
-    
+
     private var imageView = UIImageView()
     private static var scrollZoom: CGFloat?
-    
+
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBOutlet weak var myScrollView: UIScrollView! {
         didSet {
@@ -35,7 +35,11 @@ class GalleryCell: UICollectionViewCell, UIScrollViewDelegate {
             myScrollView.delegate = self
             myScrollView.maximumZoomScale = 1.0
             myScrollView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-            
+
+            let doubleTabRecogniser = UITapGestureRecognizer(target: self, action: "imageDoubleTapped")
+            doubleTabRecogniser.numberOfTapsRequired = 2
+            myScrollView.addGestureRecognizer(doubleTabRecogniser)
+
             if image != nil {
                 updateImage()
             }
@@ -85,6 +89,14 @@ class GalleryCell: UICollectionViewCell, UIScrollViewDelegate {
         self.image!.view = imageView
     }
     
+    func imageDoubleTapped() {
+        if myScrollView.zoomScale == myScrollView.maximumZoomScale {
+            myScrollView.setZoomScale(myScrollView.minimumZoomScale, animated: true)
+        } else {
+            myScrollView.setZoomScale(myScrollView.maximumZoomScale, animated: true)
+        }
+    }
+
     private func updateImage() {
         imageView.sizeToFit()
         resetScrollViewSize()

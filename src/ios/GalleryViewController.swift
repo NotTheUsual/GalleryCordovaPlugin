@@ -45,7 +45,25 @@ class GalleryViewController: UICollectionViewController {
         
         self.navigationController!.automaticallyAdjustsScrollViewInsets = false
         
-        self.navigationController!.hidesBarsOnTap = true
+        let tapRecogniser = UITapGestureRecognizer(target: self, action: "tapped")
+        tapRecogniser.numberOfTapsRequired = 1
+        self.view.addGestureRecognizer(tapRecogniser)
+        
+        let doubleTapRecogniser = UITapGestureRecognizer(target: self, action: "doubleTapped")
+        doubleTapRecogniser.numberOfTapsRequired = 2
+        self.view.addGestureRecognizer(doubleTapRecogniser)
+        
+        tapRecogniser.requireGestureRecognizerToFail(doubleTapRecogniser)        
+    }
+    
+    func tapped() {
+        let shouldHideBars = !self.navigationController!.navigationBarHidden
+        self.navigationController!.setNavigationBarHidden(shouldHideBars, animated: true)
+        self.navigationController!.setToolbarHidden(shouldHideBars, animated: true)
+    }
+    
+    func doubleTapped() {
+        print("double tapped")
     }
 
     private func addVisualEffectBG() {
