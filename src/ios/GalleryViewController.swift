@@ -46,11 +46,11 @@ class GalleryViewController: UICollectionViewController {
         
         self.navigationController!.automaticallyAdjustsScrollViewInsets = false
         
-        let tapRecogniser = UITapGestureRecognizer(target: self, action: "tapped")
+        let tapRecogniser = UITapGestureRecognizer(target: self, action: #selector(tapped))
         tapRecogniser.numberOfTapsRequired = 1
         self.view.addGestureRecognizer(tapRecogniser)
         
-        let doubleTapRecogniser = UITapGestureRecognizer(target: self, action: "doubleTapped")
+        let doubleTapRecogniser = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTapRecogniser.numberOfTapsRequired = 2
         self.view.addGestureRecognizer(doubleTapRecogniser)
         
@@ -81,10 +81,10 @@ class GalleryViewController: UICollectionViewController {
     }
     
     private func setUpNavbar() {
-        let shareButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "actionClicked:")
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(actionClicked(_:)))
         shareButton.tintColor = UIColor.whiteColor()
         self.navigationItem.rightBarButtonItem = shareButton
-        let doneButton = UIBarButtonItem(title: "Done", style: .Done, target: self, action: "doneClicked:")
+        let doneButton = UIBarButtonItem(title: "Done", style: .Done, target: self, action: #selector(doneClicked(_:)))
         doneButton.tintColor = UIColor.whiteColor()
         self.navigationItem.leftBarButtonItem = doneButton
     }
@@ -103,7 +103,7 @@ class GalleryViewController: UICollectionViewController {
     }
     
     private func addDismissGestureRecogniser() {
-        let swipeRecogniser = UISwipeGestureRecognizer(target: self, action: "swiped:")
+        let swipeRecogniser = UISwipeGestureRecognizer(target: self, action: #selector(swiped(_:)))
         swipeRecogniser.direction = .Down
         self.view.addGestureRecognizer(swipeRecogniser)
     }
@@ -175,7 +175,7 @@ class GalleryViewController: UICollectionViewController {
         if let visibleCell = currentCell(),
            let image = visibleCell.image?.view?.image {
             print(visibleCell)
-            UIImageWriteToSavedPhotosAlbum(image, self, "savedImage:withError:andContextInfo:", nil)
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(savedImage(_:withError:andContextInfo:)), nil)
         }
     }
     

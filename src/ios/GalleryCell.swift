@@ -36,7 +36,7 @@ class GalleryCell: UICollectionViewCell, UIScrollViewDelegate {
             myScrollView.maximumZoomScale = 1.0
             myScrollView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
 
-            let doubleTabRecogniser = UITapGestureRecognizer(target: self, action: "imageDoubleTapped")
+            let doubleTabRecogniser = UITapGestureRecognizer(target: self, action: #selector(imageDoubleTapped))
             doubleTabRecogniser.numberOfTapsRequired = 2
             myScrollView.addGestureRecognizer(doubleTabRecogniser)
 
