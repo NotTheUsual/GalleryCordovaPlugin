@@ -24,6 +24,7 @@ import UIKit
         let navCtrl = storyboard.instantiateViewControllerWithIdentifier("galleryNavigationController") as! UINavigationController
         let galleryNavCtrl = navCtrl.childViewControllers[0] as! GalleryViewController
         galleryNavCtrl.closeCallback = modalDidClose
+        galleryNavCtrl.pinCallback = modalDidCloseToPinImage
         galleryNavCtrl.deleteCallback = modalDidCloseToDeleteImageAtIndex
         galleryNavCtrl.initialIndex = index
         galleryNavCtrl.images = images
@@ -39,6 +40,10 @@ import UIKit
     func modalDidClose() {
         sendPluginResponse(responseDict(.Normal, index: nil))
         images = [MPImage]()
+    }
+    
+    func modalDidCloseToPinImage(atIndex index: Int) {
+        sendPluginResponse(responseDict(.Pin, index: index))
     }
     
     func modalDidCloseToDeleteImageAtIndex(index: Int) {
@@ -60,6 +65,7 @@ import UIKit
     
     private enum Response: String {
         case Normal = "none"
+        case Pin    = "pin"
         case Delete = "delete"
     }
 }

@@ -13,6 +13,7 @@ private let reuseIdentifier = "PhotoCell"
 class GalleryViewController: UICollectionViewController {
     
     var closeCallback: (() -> Void)?
+    var pinCallback: ((Int) -> Void)?
     var deleteCallback: ((Int) -> Void)?
     var initialIndex: Int?
     var images = [MPImage]()
@@ -131,13 +132,33 @@ class GalleryViewController: UICollectionViewController {
     }
     
     func actionClicked(sender: UIBarButtonItem) {
+        guard let image = currentImage() else { return }
+        
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         alertController.addAction(UIAlertAction(title: "Save to Camera Roll", style: .Default, handler: saveActivePhoto))
-        if canDeleteCurrentCell() {
+        if image.canPin {
+            let pinMessage = image.pinned ? "Remove from Details Tab" : "Pin to Details Tab"
+            alertController.addAction(UIAlertAction(title: pinMessage, style: .Default, handler: pinActivePhoto))
+        }
+        if image.canDelete {
             alertController.addAction(UIAlertAction(title: "Delete", style: .Destructive, handler: deleteActivePhoto))
         }
         alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
         presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func currentImage() -> MPImage? {
+        guard let visibleCell = currentCell(),
+            let image = visibleCell.image
+            else { return nil }
+        return image
+    }
+    
+    func canPinCurrentCell() -> Bool {
+        guard let visibleCell = currentCell(),
+            let image = visibleCell.image
+            else { return false }
+        return image.canPin
     }
     
     func canDeleteCurrentCell() -> Bool {
@@ -169,6 +190,14 @@ class GalleryViewController: UICollectionViewController {
         alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         
         presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func pinActivePhoto(action: UIAlertAction) {
+        if let visibleCell = currentCell(),
+            let index = images.indexOf(visibleCell.image!),
+            let callback = pinCallback {
+                dismissViewControllerAnimated(true) { callback(index) }
+        }
     }
     
     func deleteActivePhoto(action: UIAlertAction) {

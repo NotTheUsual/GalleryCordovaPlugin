@@ -12,6 +12,8 @@ class MPImage: CustomStringConvertible {
     let src: String
     let caption: String
     let canDelete: Bool
+    let canPin: Bool
+    let pinned: Bool
     var view: UIImageView?
     
     var description: String {
@@ -20,16 +22,20 @@ class MPImage: CustomStringConvertible {
         }
     }
     
-    init(name: String, caption: String, canDelete: Bool) {
+    init(name: String, caption: String, canDelete: Bool, canPin: Bool, pinned: Bool) {
         self.src = name
         self.caption = caption
         self.canDelete = canDelete
+        self.canPin = canPin
+        self.pinned = pinned
     }
     
     init(dictionary: [String:AnyObject]) {
         self.src = dictionary["src"] as! String
         self.caption = dictionary["caption"] as! String
         self.canDelete = dictionary["canDelete"] as! Bool
+        self.canPin = dictionary["canPin"] as! Bool
+        self.pinned = dictionary["pinned"] as! Bool
     }
 }
 
