@@ -51,6 +51,7 @@
 
       <resource-file src="src/android/res/activity_gallery.xml" target="res/layout/activity_gallery.xml" />
       <resource-file src="src/android/res/image_layout.xml" target="res/layout/image_layout.xml" />
+      <resource-file src="src/android/res/menu_gallery.xml" target="res/menu/menu_gallery.xml" />
 
       <framework src="com.squareup.picasso:picasso:2.5.2"/>
     </platform>

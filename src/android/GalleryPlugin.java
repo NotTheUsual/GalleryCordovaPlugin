@@ -18,15 +18,19 @@ import java.util.ArrayList;
 public class GalleryPlugin extends CordovaPlugin {
 
 	private static final String ACTION_SHOW_GALLERY = "viewGallery";
+	private CallbackContext callbackContext;
 
 	@Override
 	public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
+		this.callbackContext = callbackContext;
 		if (action.equals(ACTION_SHOW_GALLERY)) {
 
 			JSONArray images = args.getJSONArray(0);
 			int index = args.optInt(1,0);
 			ArrayList<String> urlsList = new ArrayList<String>();
 			ArrayList<String> captionsList = new ArrayList<String>();
+			ArrayList<Boolean> canPin = new ArrayList<Boolean>();
+			ArrayList<Boolean> canDelete = new ArrayList<Boolean>();
 
 			for (int i=0; i < images.length(); i++) {
 				urlsList.add(images.getJSONObject(i).getString("src"));
@@ -41,6 +45,8 @@ public class GalleryPlugin extends CordovaPlugin {
 
 			intent.putExtra("urls", urls);
 			intent.putExtra("captions", captions);
+			//intent.putExtra("canPin", null);
+			//intent.putExtra("canDelete", null);
 			intent.putExtra("index", index);
 			this.cordova.startActivityForResult((CordovaPlugin) this, intent, 1);
 			PluginResult r = new PluginResult(PluginResult.Status.NO_RESULT);
@@ -49,5 +55,26 @@ public class GalleryPlugin extends CordovaPlugin {
 			return true;
 		}
 		return true;
+	}
+
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		// If image available
+		if (resultCode == Activity.RESULT_OK) {
+			String action = intent.getStringExtra("action");
+			int index = intent.getIntExtra("index", -1);
+			if (action != null && index != -1) {
+				try {
+				JSONObject response = new JSONObject();
+				response.put("action", action);
+				response.put("index", index);
+				this.callbackContext.success(response);
+				} catch (JSONException ex) {
+					this.callbackContext.error("Failed to generate JSON response");
+				}
+			} else {
+				this.callbackContext.success();
+			}
+			
+		}
 	}
 }
