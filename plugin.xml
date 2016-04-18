@@ -28,4 +28,31 @@
         </feature>
       </config-file>
     </platform>
+
+    <platform name="android">
+      <config-file target="res/xml/config.xml" parent="/*">
+        <feature name="GalleryPlugin">
+          <param name="android-package" value="com.megaphone.cordova.gallery.GalleryPlugin"/>
+        </feature>
+      </config-file>
+
+       <config-file target="AndroidManifest.xml" parent="/manifest/application">
+        <activity
+            android:name="com.megaphone.cordova.gallery.GalleryActivity"
+            android:label="Gallery" android:theme="@style/EventBrowserTheme">
+        </activity>
+      </config-file>
+
+      <source-file src="src/android/GalleryActivity.java" target-dir="src/com/megaphone/cordova/gallery"/>
+      <source-file src="src/android/FakeR.java" target-dir="src/com/megaphone/cordova/gallery"/>
+      <source-file src="src/android/GalleryPlugin.java" target-dir="src/com/megaphone/cordova/gallery"/>
+      <source-file src="src/android/adapters/GalleryImageAdapter.java" target-dir="src/com/megaphone/cordova/gallery/adapters"/>
+      <source-file src="src/android/controls/TouchImageView.java" target-dir="src/com/megaphone/cordova/gallery/controls"/>
+
+      <resource-file src="src/android/res/activity_gallery.xml" target="res/layout/activity_gallery.xml" />
+      <resource-file src="src/android/res/image_layout.xml" target="res/layout/image_layout.xml" />
+      <resource-file src="src/android/res/menu_gallery.xml" target="res/menu/menu_gallery.xml" />
+
+      <framework src="com.squareup.picasso:picasso:2.5.2"/>
+    </platform>
 </plugin>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:background="#cccccc">
+    <com.megaphone.cordova.gallery.controls.TouchImageView
+        android:id="@+id/image"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent" />
+	<ProgressBar
+		android:id="@+id/spinner"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:indeterminate="true"
+		android:layout_centerVertical="true"
+		android:layout_centerHorizontal="true"
+		android:visibility="gone"
+		/>
+	<TextView
+		android:id="@+id/caption"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="#CC000000"
+		android:textColor="#ffffff"
+		android:text="Caption"
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentBottom="true"
+		android:padding="8dp"/>
+</RelativeLayout>
