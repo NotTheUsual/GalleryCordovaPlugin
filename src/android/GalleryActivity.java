@@ -21,6 +21,7 @@ import com.megaphone.cordova.gallery.adapters.GalleryImageAdapter;
 public class GalleryActivity extends AppCompatActivity {
     ActionBar actionBar;
     ViewPager viewPager;
+    ArrayList<GalleryImageAdapter.Resource> resources;
     private static FakeR fakeR;
 
     @Override
@@ -60,9 +61,15 @@ public class GalleryActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
+        GalleryImageAdapter.Resource resource = resources.get(viewPager.getCurrentItem());
         inflater.inflate(fakeR.getId("menu", "menu_gallery"), menu);
-
-        menu.getItem(0).setEnabled(false);
+        MenuItem pinMenu = menu.getItem(1);
+        if (resource.isPinned())
+            pinMenu.setTitle("Unpin");
+        else 
+            pinMenu.setTitle("Pin");
+        pinMenu.setEnabled(resource.canPin());
+        menu.getItem(2).setEnabled(resource.canDelete());
 
         return true;
     }
@@ -71,14 +78,17 @@ public class GalleryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         
 
-        ArrayList<GalleryImageAdapter.Resource> resources = new ArrayList<GalleryImageAdapter.Resource>();
+        resources = new ArrayList<GalleryImageAdapter.Resource>();
         Intent intent = getIntent();
         String[] captions = intent.getStringArrayExtra("captions");
         String[] urls = intent.getStringArrayExtra("urls");
+        boolean[] canPin = intent.getBooleanArrayExtra("canPin");
+        boolean[] canDelete = intent.getBooleanArrayExtra("canDelete");
+        boolean[] pinned = intent.getBooleanArrayExtra("pinned");
         int index = intent.getIntExtra("index",0);
         if (urls != null && captions != null) {
             for(int i=0; i< urls.length; i++) {
-                resources.add(new GalleryImageAdapter.Resource(urls[i], captions[i]));
+                resources.add(new GalleryImageAdapter.Resource(urls[i], captions[i], canPin[i], canDelete[i], pinned[i]));
             }
         }
 

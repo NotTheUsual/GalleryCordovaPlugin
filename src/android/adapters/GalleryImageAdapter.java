@@ -21,10 +21,16 @@ public class GalleryImageAdapter extends PagerAdapter {
     public static class Resource {
         private String _url;
         private String _caption;
+        private boolean _canPin;
+        private boolean _canDelete;
+        private boolean _isPinned;
 
-        public Resource(String url, String caption) {
+        public Resource(String url, String caption, boolean canPin, boolean canDelete, boolean isPinned) {
             this._url = url;
             this._caption = caption;
+            this._canPin = canPin;
+            this._canDelete = canDelete;
+            this._isPinned = isPinned;
         }
 
         public String getCaption() {
@@ -33,6 +39,18 @@ public class GalleryImageAdapter extends PagerAdapter {
 
         public String getUrl() {
             return this._url;
+        }
+
+        public boolean canPin() {
+            return this._canPin;
+        }
+
+        public boolean canDelete() {
+            return this._canDelete;
+        }
+
+        public boolean isPinned() {
+            return this._isPinned;
         }
 
     }
